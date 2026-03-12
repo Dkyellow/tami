@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
 
 :root {
-    --primary-color: #004d4d;
-    --secondary-color: #d4af37;
-    --accent-color: #2ecc71;
+    --primary-color: #00184d;
+    --secondary-color: #d437d4;
+    --accent-color: #8f2ecc;
     --text-color: #333333;
     --text-muted: #666666;
     --bg-light: #f8f9fa;
@@ -42,7 +42,10 @@ img {
     display: block;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
     line-height: 1.2;
     font-weight: 700;
 }
@@ -78,8 +81,13 @@ h1, h2, h3, h4 {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Navigation */
@@ -370,8 +378,13 @@ section {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .testimonial-text {
@@ -427,24 +440,24 @@ footer {
         transition: right 0.4s ease-in-out;
         z-index: 1000;
     }
-    
+
     .nav-links.active {
         right: 0;
     }
-    
+
     .mobile-menu-btn {
         display: block;
         padding: 10px;
     }
-    
+
     .hero-content h1 {
         font-size: 2.2rem;
     }
-    
+
     .hero-content p {
         font-size: 1rem;
     }
-    
+
     .hero-btns {
         flex-direction: column;
         align-items: stretch;
