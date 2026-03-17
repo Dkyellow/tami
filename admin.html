@@ -165,6 +165,10 @@
     <main class="container">
         <div class="section-title" style="text-align: left; margin-bottom: 30px;">
             <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Agency Dashboard</h1>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                <div id="dbStatusDot" style="width: 12px; height: 12px; border-radius: 50%; background: #666;"></div>
+                <span id="dbStatusText" style="font-size: 0.9rem; color: var(--text-muted);">Checking database connection...</span>
+            </div>
             <p>Real-time analytics and inquiry management.</p>
         </div>
 
@@ -241,19 +245,37 @@
         }
 
         async function loadDashboard() {
+            const statusDot = document.getElementById('dbStatusDot');
+            const statusText = document.getElementById('dbStatusText');
+
             try {
                 const response = await fetch('api/get_contacts.php');
                 const result = await response.json();
 
                 if (result.success) {
+                    // Update status indicator
+                    statusDot.style.background = '#28a745'; // Green
+                    statusText.innerText = 'Connected';
+                    statusText.style.color = '#28a745';
+
                     document.getElementById('visitorCount').innerText = result.visitor_count || 0;
                     document.getElementById('submissionCount').innerText = result.data.length;
                     updateTable(result.data);
                 } else {
+                    // Update status indicator to error
+                    statusDot.style.background = '#dc3545'; // Red
+                    statusText.innerText = 'Error: ' + (result.error || 'Connection failed');
+                    statusText.style.color = '#dc3545';
+                    
                     console.error("Error fetching data:", result.error);
                     showDemoData();
                 }
             } catch (err) {
+                // Update status indicator to failed
+                statusDot.style.background = '#dc3545'; // Red
+                statusText.innerText = 'Error: Could not reach API';
+                statusText.style.color = '#dc3545';
+
                 console.error("Connection Error:", err);
                 showDemoData();
             }
