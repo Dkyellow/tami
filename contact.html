@@ -4,23 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us | Book Your Nanny or Cleaner in Pretoria | Tami Agency</title>
+    <title>Contact Us | Book Your Nanny or Cleaner in South Africa | Tami Agency</title>
     <meta name="description"
-        content="Reach out to Tami Agency for trusted household staff placements in Pretoria. Send a message via WhatsApp or our form for a quick response.">
-    <meta name="keywords" content="contact nanny agency, book domestic worker pretoria, hire cleaner pretoria, nanny placement agency">
+        content="Reach out to Tami Agency for trusted household staff placements across South Africa. Send a message via WhatsApp or our form for a quick response.">
+    <meta name="keywords" content="contact nanny agency, book domestic worker south africa, hire cleaner south africa, nanny placement agency">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tamiagency.vercel.app/contact.html">
-    <meta property="og:title" content="Contact Us | Book Your Nanny or Cleaner in Pretoria | Tami Agency">
-    <meta property="og:description" content="Send a message via WhatsApp or our form for a quick response. Trusted household staff in Pretoria.">
+    <meta property="og:title" content="Contact Us | Book Your Nanny or Cleaner in South Africa | Tami Agency">
+    <meta property="og:description" content="Send a message via WhatsApp or our form for a quick response. Trusted household staff in South Africa.">
     <meta property="og:image" content="img/contact-hero.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://tamiagency.vercel.app/contact.html">
-    <meta property="twitter:title" content="Contact Us | Book Your Nanny or Cleaner in Pretoria | Tami Agency">
-    <meta property="twitter:description" content="Send a message via WhatsApp or our form for a quick response. Trusted household staff in Pretoria.">
+    <meta property="twitter:title" content="Contact Us | Book Your Nanny or Cleaner in South Africa | Tami Agency">
+    <meta property="twitter:description" content="Send a message via WhatsApp or our form for a quick response. Trusted household staff in South Africa.">
     <meta property="twitter:image" content="img/contact-hero.png">
 
     <link rel="stylesheet" href="css/style.css">
@@ -134,8 +134,7 @@
     <section>
         <div class="container">
             <h3 style="margin-bottom: 20px; text-align: center;">Our Service Area</h3>
-            <p style="text-align: center; margin-bottom: 30px;">Proudly serving within 25 miles of Pretoria, South
-                Africa</p>
+            <p style="text-align: center; margin-bottom: 30px;">Proudly serving all cities across South Africa</p>
             <div id="map" style="height: 400px; border-radius: 20px; box-shadow: var(--shadow); z-index: 1;"></div>
         </div>
     </section>
@@ -154,27 +153,48 @@
     <script src="js/main.js"></script>
     <script>
         // Initialize Map
-        const map = L.map('map').setView([-25.7479, 28.2293], 11); // centered on Pretoria
+        const map = L.map('map').setView([-30.5595, 22.9375], 6); // centered on South Africa
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        L.marker([-25.7479, 28.2293]).addTo(map)
-            .bindPopup('Tami Domestic and Nanny Agency Area')
+        L.marker([-30.5595, 22.9375]).addTo(map)
+            .bindPopup('Serving all cities in South Africa')
             .openPopup();
 
+        // Configuration for Supabase
+        const SUPABASE_URL = ""; 
+        const SUPABASE_ANON_KEY = "";
+        let supabaseClient = null;
+        if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
         // Handle form submission
-        document.getElementById('contactForm').addEventListener('submit', (e) => {
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const service = document.getElementById('service').value;
-            const message = document.getElementById('message').value;
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                service: document.getElementById('service').value,
+                message: document.getElementById('message').value,
+                created_at: new Date().toISOString()
+            };
             
+            // 1. Log to Supabase (if configured)
+            if (supabaseClient) {
+                try {
+                    await supabaseClient.from('submissions').insert([formData]);
+                } catch (err) {
+                    console.error("Supabase Error:", err);
+                }
+            }
+            
+            // 2. Clear Form & Redirect to WhatsApp
             const whatsappNumber = "27601029595";
-            const text = `*New Inquiry from Tami Agency Website*%0A%0A*Name:* ${name}%0A*Email:* ${email}%0A*Service:* ${service}%0A*Message:* ${message}`;
+            const text = `*New Inquiry from Tami Agency Website*%0A%0A*Name:* ${formData.name}%0A*Email:* ${formData.email}%0A*Service:* ${formData.service}%0A*Message:* ${formData.message}`;
             
             const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${text}`;
             
@@ -182,6 +202,9 @@
             e.target.reset();
         });
     </script>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
     <a href="https://wa.me/27601029595" class="whatsapp-fab" target="_blank">
         <i class="fab fa-whatsapp"></i>
