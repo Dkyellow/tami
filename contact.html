@@ -205,6 +205,12 @@
         });
     </script>
 
+    <script>
+        // Log visit on load
+        window.addEventListener('load', () => {
+            fetch('api/log_visit.php').catch(err => console.error('Visit log error:', err));
+        });
+    </script>
     <a href="https://wa.me/27601029595" class="whatsapp-fab" target="_blank">
         <i class="fab fa-whatsapp"></i>
     </a>

@@ -173,19 +173,19 @@
                 <i class="fas fa-users"></i>
                 <h3>Total Visitors</h3>
                 <div class="value" id="visitorCount">Loading...</div>
-                <a href="https://vercel.com/" target="_blank" style="font-size: 0.8rem; color: var(--secondary-color); margin-top: 10px; display: inline-block;">View in Vercel →</a>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Unique site visits</p>
             </div>
             <div class="stat-card">
                 <i class="fas fa-envelope-open-text"></i>
                 <h3>Total Inquiries</h3>
                 <div class="value" id="submissionCount">0</div>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Saved via Supabase</p>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Database Records</p>
             </div>
             <div class="stat-card">
                 <i class="fas fa-chart-line"></i>
-                <h3>Growth</h3>
-                <div class="value">Premium</div>
-                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Vercel Web Analytics Active</p>
+                <h3>Quick Stats</h3>
+                <div class="value">Live</div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Agency Dashboard Active</p>
             </div>
         </div>
 
@@ -246,6 +246,7 @@
                 const result = await response.json();
 
                 if (result.success) {
+                    document.getElementById('visitorCount').innerText = result.visitor_count || 0;
                     document.getElementById('submissionCount').innerText = result.data.length;
                     updateTable(result.data);
                 } else {

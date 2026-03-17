@@ -215,6 +215,12 @@
     </a>
 
     <script src="js/main.js"></script>
+    <script>
+        // Log visit on load
+        window.addEventListener('load', () => {
+            fetch('api/log_visit.php').catch(err => console.error('Visit log error:', err));
+        });
+    </script>
 </body>
 
 </html>
