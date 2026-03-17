@@ -2,7 +2,7 @@
 // Database configuration - Update these with your cPanel details
 $host = 'localhost'; // Usually 'localhost' in cPanel
 $db = 'tamidome_tami_db';
-$user = 'tami_admin';
+$user = 'tamidome_tami_admin';
 $pass = 'grS&?Yz^ijtg@a}{';
 $charset = 'utf8mb4';
 
