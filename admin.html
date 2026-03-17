@@ -215,20 +215,11 @@
         </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script>
-        // CONFIGURATION (Fill these to enable Supabase)
-        const SUPABASE_URL = "";
-        const SUPABASE_ANON_KEY = "";
-        
-        let client = null;
-        if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-            client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
+        const pass = "tami2026"; // Simple default password
 
         function checkPass() {
-            const pass = document.getElementById('adminPass').value;
-            if (pass === "tami2026") { // Simple default password
+            const inputPass = document.getElementById('adminPass').value;
+            if (inputPass === pass) {
                 document.getElementById('loginOverlay').style.display = 'none';
                 sessionStorage.setItem('adminAuth', 'true');
                 loadDashboard();
@@ -249,30 +240,29 @@
         }
 
         async function loadDashboard() {
-            if (!client) {
-                console.warn("Supabase not configured. Showing demo data.");
-                showDemoData();
-                return;
-            }
-
             try {
-                const { data, error } = await client
-                    .from('submissions')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                const response = await fetch('api/get_contacts.php');
+                const result = await response.json();
 
-                if (error) throw error;
-
-                document.getElementById('submissionCount').innerText = data.length;
-                updateTable(data);
+                if (result.success) {
+                    document.getElementById('submissionCount').innerText = result.data.length;
+                    updateTable(result.data);
+                } else {
+                    console.error("Error fetching data:", result.error);
+                    showDemoData();
+                }
             } catch (err) {
-                console.error("Error fetching data:", err);
+                console.error("Connection Error:", err);
+                showDemoData();
             }
         }
 
         function updateTable(data) {
             const tbody = document.getElementById('submissionTableBody');
-            if (data.length === 0) return;
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">No submissions found yet.</td></tr>';
+                return;
+            }
 
             tbody.innerHTML = data.map(sub => `
                 <tr>
@@ -286,13 +276,7 @@
         }
 
         function showDemoData() {
-            document.getElementById('submissionCount').innerText = "3";
-            const demo = [
-                { created_at: new Date(), name: "Lerato M.", email: "lerato@example.com", service: "Nanny", message: "Looking for a full-time nanny in Centurion." },
-                { created_at: new Date(Date.now() - 86400000), name: "David S.", email: "david@test.com", service: "Cleaning", message: "Need deep cleaning for a move-out." },
-                { created_at: new Date(Date.now() - 172800000), name: "Sarah J.", email: "sarah@mail.com", service: "Gardening", message: "Seeking weekly garden maintenance." }
-            ];
-            updateTable(demo);
+            document.getElementById('submissionCount').innerText = "0";
             document.getElementById('visitorCount').innerText = "142";
         }
     </script>

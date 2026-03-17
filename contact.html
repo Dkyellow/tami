@@ -163,14 +163,6 @@
             .bindPopup('Serving all cities in South Africa')
             .openPopup();
 
-        // Configuration for Supabase
-        const SUPABASE_URL = ""; 
-        const SUPABASE_ANON_KEY = "";
-        let supabaseClient = null;
-        if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
-
         // Handle form submission
         document.getElementById('contactForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -179,17 +171,27 @@
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
                 service: document.getElementById('service').value,
-                message: document.getElementById('message').value,
-                created_at: new Date().toISOString()
+                message: document.getElementById('message').value
             };
             
-            // 1. Log to Supabase (if configured)
-            if (supabaseClient) {
-                try {
-                    await supabaseClient.from('submissions').insert([formData]);
-                } catch (err) {
-                    console.error("Supabase Error:", err);
+            try {
+                // 1. Log to MySQL via PHP
+                const response = await fetch('api/submit_contact.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    console.log("Success:", result.message);
+                } else {
+                    console.error("Error:", result.error);
                 }
+            } catch (err) {
+                console.error("Submission Error:", err);
             }
             
             // 2. Clear Form & Redirect to WhatsApp
@@ -202,9 +204,6 @@
             e.target.reset();
         });
     </script>
-
-    <!-- Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
     <a href="https://wa.me/27601029595" class="whatsapp-fab" target="_blank">
         <i class="fab fa-whatsapp"></i>
